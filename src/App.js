@@ -1,24 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Link, Switch, Route, Redirect, withRouter } from "react-router-dom";
+import "semantic-ui-css/semantic.min.css";
+import Marquee from "react-marquee";
+
+import "./App.css";
+
+import HomeScreen from "./screens/Home";
+import { Container, Grid } from "semantic-ui-react";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Container>
+        <header className="App-header">
+          <Grid>
+            <Grid.Column width={8}>
+              <marquee>
+                <h1>
+                  <Marquee text="Welcome to the million dollar pixels page!!!" />
+                </h1>
+              </marquee>
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <span>1,000,000 pixels | $1 / pixel | One month!</span>
+            </Grid.Column>
+            <Grid.Column width={4}>{0} pixels sold!</Grid.Column>
+          </Grid>
+          <div>
+            <Link to="/" className="nav-link">
+              Home
+            </Link>
+            <Link to="/buy" className="nav-link">
+              Buy a pixel
+            </Link>
+            <Link to="/follow" className="nav-link">
+              Follow me on Twitter!
+            </Link>
+          </div>
+        </header>
+
+        <div>
+          <Switch>
+            <Route exact path="/" component={HomeScreen} />
+            {/* <Route path="/profile/:login" component={ProfileScreen} />
+        <Route path="/account" component={AccountScreen} />
+        <Route path="/logout" component={LogoutScreen} /> */}
+          </Switch>
+        </div>
+      </Container>
     </div>
   );
 }
