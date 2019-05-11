@@ -5,8 +5,10 @@ import Marquee from "react-marquee";
 
 import "./App.css";
 
-import HomeScreen from "./screens/Home";
 import { Container, Grid } from "semantic-ui-react";
+
+import HomeScreen from "./screens/Home";
+import BuyScreen from "./screens/Buy";
 
 function App() {
   return (
@@ -42,6 +44,7 @@ function App() {
         <div>
           <Switch>
             <Route exact path="/" component={HomeScreen} />
+            <Route path="/buy" component={BuyScreen} />
             {/* <Route path="/profile/:login" component={ProfileScreen} />
         <Route path="/account" component={AccountScreen} />
         <Route path="/logout" component={LogoutScreen} /> */}
