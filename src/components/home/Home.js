@@ -7,33 +7,30 @@ import Konva from "konva";
 import "react-tippy/dist/tippy.css";
 
 class CustomRect extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleOver = e => {
     const stage = e.target.getStage();
     const pointerPos = stage.getPointerPosition();
-    const { x, y, onOver } = this.props;
-    console.log(x, y, pointerPos);
-    onOver(x, y);
+    const { x, y, url } = this.props;
+    console.log(url, x, y, pointerPos);
   };
 
-  handleOut = e => {
-    const { x, y, onOut } = this.props;
-    console.log(x, y);
-    onOut(x, y);
+  handleOut = e => {};
+
+  handleOnClick = e => {
+    const { x, y, url } = this.props;
+    if (!url) {
+      console.log("NAVIGATE TO BUY");
+      this.props.history.push("/buy");
+      return;
+    }
+    console.log("NAVIGATE TO SITE");
   };
 
-  // handleClick = () => {
-  //   this.setState({
-  //     color: Konva.Util.getRandomColor()
-  //   });
-  // };
   render() {
-    const { x, y, xPos, yPos, width, height } = this.props;
+    const { color, url, x, y, xPos, yPos, width, height } = this.props;
     return (
       <Rect
+        fill={color}
         x={xPos}
         y={yPos}
         width={width}
@@ -42,34 +39,43 @@ class CustomRect extends React.Component {
         strokeWidth={1}
         onMouseEnter={this.handleOver}
         onMouseLeave={this.handleOut}
+        onClick={this.handleOnClick}
       />
     );
   }
 }
 
+const makeKey = ({ x, y }) => `${x},${y}`;
+
 const makeGrid = ({
+  coloredGridMap = [],
   width = 50,
   height = 50,
   numX = 0,
   numY = 0,
-  onOver,
-  onOut
+  history
 }) => {
   const rects = [];
   const rectWidth = width / numX;
   const rectHeight = height / numY;
   for (let y = 0; y < numY; y++) {
     for (let x = 0; x < numX; x++) {
+      const key = makeKey({ x, y });
+      const mapEntry = coloredGridMap[key];
+      const color = mapEntry && mapEntry.color ? mapEntry.color : null;
+      const url = mapEntry && mapEntry.url ? mapEntry.url : null;
+
       rects.push(
         <CustomRect
+          url={url}
+          color={color}
           x={x}
           y={y}
           xPos={x * rectWidth}
           yPos={y * rectHeight}
           width={rectWidth}
           height={rectHeight}
-          onOver={onOver}
-          onOut={onOut}
+          history={history}
         />
       );
     }
@@ -79,43 +85,61 @@ const makeGrid = ({
 
 class Home extends React.Component {
   state = {
-    showRect: false,
+    url: null,
     currX: 0,
-    currY: 0
+    currY: 0,
+    coloredGridMap: {
+      "0,5": { color: "#f00", url: "http://www.lego.com/" },
+      "0,4": { color: "#f00", url: "http://www.lego.com/" },
+      "0,3": { color: "#f00", url: "http://www.lego.com/" },
+      "12,17": { color: "#f00", url: "http://www.lego.com/" },
+      "32,37": { color: "#f00", url: "http://www.lego.com/" }
+    }
   };
 
-  onOver = (x, y) => {
-    console.log("over");
-    this.setState({
-      showRect: true,
-      currX: x,
-      currY: y
-    });
-  };
+  handleMouseMove = e => {
+    const { coloredGridMap } = this.state;
+    const stage = e.target.getStage();
+    const pointerPos = stage.getPointerPosition();
 
-  onOut = (x, y) => {
-    console.log("out");
-    this.setState({
-      showRect: false
-    });
-  };
+    const rectWidth = 933 / 70;
+    const rectHeight = window.innerHeight / 70;
 
-  rects = makeGrid({
-    width: 933,
-    height: window.innerHeight,
-    numX: 100,
-    numY: 100,
-    onOver: this.onOver,
-    onOut: this.onOut
-  });
+    const coords = {
+      x: Math.floor(pointerPos.x / rectWidth),
+      y: Math.floor(pointerPos.y / rectHeight)
+    };
+
+    const key = makeKey(coords);
+    const entry = coloredGridMap[key];
+    if (entry) {
+      this.setState({
+        url: entry.url
+      });
+    } else if (this.state.url && !entry) {
+      this.setState({
+        url: null
+      });
+    }
+  };
 
   render() {
-    const { currX, currY, showRect } = this.state;
+    const { coloredGridMap, url, currX, currY } = this.state;
+    const { history } = this.props;
+
+    const rects = makeGrid({
+      coloredGridMap,
+      width: 933,
+      height: window.innerHeight,
+      numX: 70,
+      numY: 70,
+      history
+    });
 
     return (
       <Tooltip
         // options
-        title={`Buy (${currX},${currY})`}
+        title={url ? url : `Buy this pixel!`}
         position="bottom"
         trigger="mouseenter"
         followCursor={true}
@@ -128,11 +152,15 @@ class Home extends React.Component {
             background: "#eee"
           }}
         >
-          <Stage width={933} height={window.innerHeight}>
+          <Stage
+            width={933}
+            height={window.innerHeight}
+            onMouseMove={this.handleMouseMove}
+          >
             <Layer>
               {/* <Text text="Try click on rect" /> */}
               {/* <ColoredRect /> */}
-              {this.rects.map(r => r)}
+              {rects.map(r => r)}
             </Layer>
           </Stage>
         </div>

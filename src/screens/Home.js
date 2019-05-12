@@ -9,7 +9,8 @@ class HomeScreen extends Component {
   }
 
   render() {
-    return <Home />;
+    const { history } = this.props;
+    return <Home history={history} />;
   }
 }
 

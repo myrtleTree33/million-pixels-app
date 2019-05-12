@@ -51,6 +51,9 @@ function App() {
           </Switch>
         </div>
       </Container>
+      <footer>
+        A React native joke by . No puppies were killed in this process.
+      </footer>
     </div>
   );
 }
