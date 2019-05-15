@@ -5,6 +5,7 @@
   "dependencies": {
     "konva": "^3.2.6",
     "react": "^16.8.6",
+    "react-color": "^2.17.3",
     "react-dom": "^16.8.6",
     "react-konva": "^16.8.6",
     "react-marquee": "^1.0.0",

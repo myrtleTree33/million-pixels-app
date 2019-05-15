@@ -52,7 +52,18 @@ function App() {
         </div>
       </Container>
       <footer>
-        A React native joke by . No puppies were killed in this process.
+        <Container>
+          <div
+            style={{
+              marginTop: "2rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            A React native joke by . No puppies were killed in this process.
+          </div>
+        </Container>
       </footer>
     </div>
   );
