@@ -44,7 +44,7 @@ function App() {
         <div>
           <Switch>
             <Route exact path="/" component={HomeScreen} />
-            <Route path="/buy" component={BuyScreen} />
+            <Route path="/buy/:loc" component={BuyScreen} />
             {/* <Route path="/profile/:login" component={ProfileScreen} />
         <Route path="/account" component={AccountScreen} />
         <Route path="/logout" component={LogoutScreen} /> */}

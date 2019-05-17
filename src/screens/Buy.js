@@ -9,7 +9,8 @@ class BuyScreen extends Component {
   }
 
   render() {
-    return <Buy />;
+    const { loc } = this.props.match.params;
+    return <Buy loc={loc} />;
   }
 }
 

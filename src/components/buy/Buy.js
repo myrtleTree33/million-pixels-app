@@ -15,6 +15,11 @@ class Buy extends React.Component {
     displayWarning: false
   };
 
+  componentDidMount = () => {
+    const { loc } = this.props;
+    this.setState({ pos: loc.replace("-", ",") });
+  };
+
   handleColorChange = (e, { value }) => {
     console.log(value);
     this.setState({ color: value });
@@ -52,7 +57,7 @@ class Buy extends React.Component {
   };
 
   render() {
-    const { color, customColor, displayWarning } = this.state;
+    const { color, customColor, displayWarning, pos } = this.state;
 
     return (
       <div
@@ -81,6 +86,7 @@ class Buy extends React.Component {
               placeholder="12,5"
               label="Pixel position"
               name="position"
+              value={pos}
               onChange={this.handlePixelChange}
             />
 
