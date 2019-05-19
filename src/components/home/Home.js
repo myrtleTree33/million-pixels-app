@@ -5,6 +5,7 @@ import { Stage, Layer, Rect, Text } from "react-konva";
 import Konva from "konva";
 
 import "react-tippy/dist/tippy.css";
+import { unregisterPartial } from "handlebars";
 
 class CustomRect extends React.Component {
   handleOver = e => {
@@ -83,8 +84,15 @@ const makeGrid = ({
   return rects;
 };
 
+const fetchPage = async page => {
+  // TODO load page and do comparison here
+  console.log(page);
+  return page === 5 ? Promise.resolve([]) : Promise.resolve([1, 2, 3]);
+};
+
 class Home extends React.Component {
   state = {
+    isComplete: false,
     url: null,
     currX: 0,
     currY: 0,
@@ -96,6 +104,38 @@ class Home extends React.Component {
       "32,37": { color: "#f00", url: "http://www.lego.com/" }
     }
   };
+
+  updateGridProgressively = () => {
+    const scheduleLoad = page => {
+      (async () => {
+        const results = await fetchPage(page);
+        const { coloredGridMap } = this.state;
+        // this.setState({
+        //   coloredGridMap: {
+        //     ...coloredGridMap,
+        //     results
+        //   }
+        // });
+
+        // TODO mock terminating condition here
+        if (!results || results.length === 0) {
+          console.log("DONE");
+          return;
+        }
+
+        // Do progressive load
+        setTimeout(() => {
+          scheduleLoad(page + 1);
+        }, 50);
+      })();
+    };
+
+    scheduleLoad(0);
+  };
+
+  componentDidMount() {
+    this.updateGridProgressively();
+  }
 
   handleMouseMove = e => {
     const { coloredGridMap } = this.state;

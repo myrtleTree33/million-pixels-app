@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "konva": "^3.2.6",
+    "query-string": "^6.5.0",
     "react": "^16.8.6",
     "react-color": "^2.17.3",
     "react-dom": "^16.8.6",

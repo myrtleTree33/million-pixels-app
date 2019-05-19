@@ -5,6 +5,18 @@ import { HuePicker } from "react-color";
 
 import "react-tippy/dist/tippy.css";
 
+const getLoc = loc => {
+  try {
+    const locParsed = loc.split(",");
+    if (!locParsed || locParsed.length !== 2) {
+      return null;
+    }
+    return locParsed;
+  } catch (e) {
+    return null;
+  }
+};
+
 class Buy extends React.Component {
   state = {
     pos: null,
@@ -16,12 +28,11 @@ class Buy extends React.Component {
   };
 
   componentDidMount = () => {
-    const { loc } = this.props;
+    const { loc = "" } = this.props;
     this.setState({ pos: loc.replace("-", ",") });
   };
 
   handleColorChange = (e, { value }) => {
-    console.log(value);
     this.setState({ color: value });
   };
 
@@ -47,13 +58,20 @@ class Buy extends React.Component {
     this.setState({ tosAgreed: !this.state.tosAgreed });
   };
 
-  handleSubmit = (e, props) => {
-    console.log(this.state);
+  handleSubmit = (e, propArgs) => {
+    const { onSubmit } = this.props;
     const { pos, color, hyperlink, tosAgreed, customColor } = this.state;
-    if (!pos || !color || !hyperlink || !tosAgreed) {
+
+    const posParsed = getLoc(pos);
+
+    if (!posParsed || !color || !hyperlink || !tosAgreed) {
       this.setState({ displayWarning: true });
       return;
     }
+
+    const [x, y] = posParsed;
+
+    onSubmit({ ...this.state, x, y });
   };
 
   render() {
@@ -128,14 +146,23 @@ class Buy extends React.Component {
                 checked={color === "blue"}
                 onChange={this.handleColorChange}
               />
+            </Form.Group>
 
+            <Form.Field
+              style={{
+                marginTop: "2rem"
+              }}
+            >
+              <p>
+                <b>OR Custom color</b>
+              </p>
               <Form.Radio
                 label="Custom"
                 value="custom"
                 checked={color === "custom"}
                 onChange={this.handleColorChange}
               />
-            </Form.Group>
+            </Form.Field>
 
             <Form.Field>
               <HuePicker
@@ -145,7 +172,13 @@ class Buy extends React.Component {
               />
             </Form.Field>
 
-            <Button type="submit">Submit</Button>
+            <Form.Field
+              style={{
+                marginTop: "2rem"
+              }}
+            >
+              <Button type="submit">Submit</Button>
+            </Form.Field>
           </Form>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import queryString from "query-string";
 
 import Buy from "../components/buy/Buy";
 
@@ -8,9 +9,15 @@ class BuyScreen extends Component {
     super(props);
   }
 
+  handleSubmit = data => {
+    console.log(data);
+    // TODO post to backend
+    this.props.history.push("/");
+  };
+
   render() {
-    const { loc } = this.props.match.params;
-    return <Buy loc={loc} />;
+    const { loc } = queryString.parse(this.props.location.search);
+    return <Buy loc={loc} onSubmit={this.handleSubmit} />;
   }
 }
 
