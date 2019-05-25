@@ -5,6 +5,9 @@ import Marquee from "react-marquee";
 
 import "./App.css";
 
+import doge from "./doge.gif";
+import webFinish from "./webFinish.gif";
+
 import { Container, Grid } from "semantic-ui-react";
 
 import HomeScreen from "./screens/Home";
@@ -23,10 +26,19 @@ function App() {
                 </h1>
               </marquee>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={2}>
               <span>1,000,000 pixels | $1 / pixel | One month!</span>
             </Grid.Column>
-            <Grid.Column width={4}>{0} pixels sold!</Grid.Column>
+            <Grid.Column width={4}>
+              <div>{0} pixels sold!</div>
+              <img
+                src={doge}
+                style={{
+                  maxWidth: "100px",
+                  height: "auto"
+                }}
+              />
+            </Grid.Column>
           </Grid>
           <div>
             <Link to="/" className="nav-link">
@@ -61,7 +73,18 @@ function App() {
               justifyContent: "center"
             }}
           >
-            A React native joke by . No puppies were killed in this process.
+            <div>
+              A React native joke by . No puppies were killed in this process.
+            </div>
+            <div>
+              <img
+                src={webFinish}
+                style={{
+                  maxWidth: "100px",
+                  height: "auto"
+                }}
+              />
+            </div>
           </div>
         </Container>
       </footer>

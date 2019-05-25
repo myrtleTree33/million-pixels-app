@@ -6,20 +6,21 @@ import Konva from "konva";
 
 import "react-tippy/dist/tippy.css";
 import { unregisterPartial } from "handlebars";
+import ky from "ky";
 
 class CustomRect extends React.Component {
   handleOver = e => {
     const stage = e.target.getStage();
     const pointerPos = stage.getPointerPosition();
-    const { x, y, url } = this.props;
-    console.log(url, x, y, pointerPos);
+    const { x, y, weblink } = this.props;
+    console.log(weblink, x, y, pointerPos);
   };
 
   handleOut = e => {};
 
   handleOnClick = e => {
-    const { x, y, url } = this.props;
-    if (!url) {
+    const { x, y, weblink } = this.props;
+    if (!weblink) {
       console.log("NAVIGATE TO BUY");
       this.props.history.push("/buy");
       return;
@@ -28,7 +29,7 @@ class CustomRect extends React.Component {
   };
 
   render() {
-    const { color, url, x, y, xPos, yPos, width, height } = this.props;
+    const { color, weblink, x, y, xPos, yPos, width, height } = this.props;
     return (
       <Rect
         fill={color}
@@ -64,11 +65,11 @@ const makeGrid = ({
       const key = makeKey({ x, y });
       const mapEntry = coloredGridMap[key];
       const color = mapEntry && mapEntry.color ? mapEntry.color : null;
-      const url = mapEntry && mapEntry.url ? mapEntry.url : null;
+      const weblink = mapEntry && mapEntry.weblink ? mapEntry.weblink : null;
 
       rects.push(
         <CustomRect
-          url={url}
+          weblink={weblink}
           color={color}
           x={x}
           y={y}
@@ -87,21 +88,28 @@ const makeGrid = ({
 const fetchPage = async page => {
   // TODO load page and do comparison here
   console.log(page);
-  return page === 5 ? Promise.resolve([]) : Promise.resolve([1, 2, 3]);
+
+  const res = await ky
+    .get(`http://localhost:8080/pixel/all?page=${page}`)
+    .json();
+
+  return res;
+
+  // return page === 5 ? Promise.resolve([]) : Promise.resolve([1, 2, 3]);
 };
 
 class Home extends React.Component {
   state = {
     isComplete: false,
-    url: null,
+    weblink: null,
     currX: 0,
     currY: 0,
     coloredGridMap: {
-      "0,5": { color: "#f00", url: "http://www.lego.com/" },
-      "0,4": { color: "#f00", url: "http://www.lego.com/" },
-      "0,3": { color: "#f00", url: "http://www.lego.com/" },
-      "12,17": { color: "#f00", url: "http://www.lego.com/" },
-      "32,37": { color: "#f00", url: "http://www.lego.com/" }
+      "0,5": { color: "#f00", weblink: "http://www.lego.com/" },
+      "0,4": { color: "#f00", weblink: "http://www.lego.com/" },
+      "0,3": { color: "#f00", weblink: "http://www.lego.com/" },
+      "12,17": { color: "#f00", weblink: "http://www.lego.com/" },
+      "32,37": { color: "#f00", weblink: "http://www.lego.com/" }
     }
   };
 
@@ -110,18 +118,24 @@ class Home extends React.Component {
       (async () => {
         const results = await fetchPage(page);
         const { coloredGridMap } = this.state;
-        // this.setState({
-        //   coloredGridMap: {
-        //     ...coloredGridMap,
-        //     results
-        //   }
-        // });
 
         // TODO mock terminating condition here
         if (!results || results.length === 0) {
           console.log("DONE");
           return;
         }
+
+        const resultsMap = Object.assign(
+          {},
+          ...results.map(s => ({ [`${s.x},${s.y}`]: s }))
+        );
+
+        console.log("************8");
+        console.log(this.state.coloredGridMap);
+        console.log("************8");
+        this.setState({
+          coloredGridMap: Object.assign(coloredGridMap, resultsMap)
+        });
 
         // Do progressive load
         setTimeout(() => {
@@ -154,17 +168,17 @@ class Home extends React.Component {
     const entry = coloredGridMap[key];
     if (entry) {
       this.setState({
-        url: entry.url
+        weblink: entry.weblink
       });
-    } else if (this.state.url && !entry) {
+    } else if (this.state.weblink && !entry) {
       this.setState({
-        url: null
+        weblink: null
       });
     }
   };
 
   render() {
-    const { coloredGridMap, url, currX, currY } = this.state;
+    const { coloredGridMap, weblink, currX, currY } = this.state;
     const { history } = this.props;
 
     const rects = makeGrid({
@@ -179,7 +193,7 @@ class Home extends React.Component {
     return (
       <Tooltip
         // options
-        title={url ? url : `Buy this pixel!`}
+        title={weblink ? weblink : `Buy this pixel!`}
         position="bottom"
         trigger="mouseenter"
         followCursor={true}
