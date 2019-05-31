@@ -12,6 +12,7 @@ import { Container, Grid } from "semantic-ui-react";
 
 import HomeScreen from "./screens/Home";
 import BuyScreen from "./screens/Buy";
+import PixelScreen from "./screens/Pixel";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={HomeScreen} />
             <Route path="/buy" component={BuyScreen} />
+            <Route path="/p" component={PixelScreen} />
             {/* <Route path="/profile/:login" component={ProfileScreen} />
         <Route path="/account" component={AccountScreen} />
         <Route path="/logout" component={LogoutScreen} /> */}

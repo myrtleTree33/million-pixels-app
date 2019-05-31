@@ -25,7 +25,10 @@ class CustomRect extends React.Component {
       this.props.history.push("/buy");
       return;
     }
-    console.log("NAVIGATE TO SITE");
+
+    // Navigate to site
+    const loc = `${x}-${y}`;
+    this.props.history.push(`/p?loc=${loc}`);
   };
 
   render() {
