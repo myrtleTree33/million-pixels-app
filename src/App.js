@@ -23,15 +23,15 @@ function App() {
             <Grid.Column width={8}>
               <marquee>
                 <h1>
-                  <Marquee text="Welcome to the million dollar pixels page!!!" />
+                  <Marquee text="Welcome to the internet's best squircle page!!!" />
                 </h1>
               </marquee>
             </Grid.Column>
             <Grid.Column width={2}>
-              <span>1,000,000 pixels | $1 / pixel | One month!</span>
+              <span>1,000,000 squircles | $5 / squircle | One month!</span>
             </Grid.Column>
             <Grid.Column width={4}>
-              <div>{0} pixels sold!</div>
+              <div>{0} squircles sold!</div>
               <img
                 src={doge}
                 style={{
@@ -46,7 +46,7 @@ function App() {
               Home
             </Link>
             <Link to="/buy" className="nav-link">
-              Buy a pixel
+              Buy a squircle
             </Link>
             <Link to="/follow" className="nav-link">
               Follow me on Twitter!
@@ -59,9 +59,6 @@ function App() {
             <Route exact path="/" component={HomeScreen} />
             <Route path="/buy" component={BuyScreen} />
             <Route path="/p" component={PixelScreen} />
-            {/* <Route path="/profile/:login" component={ProfileScreen} />
-        <Route path="/account" component={AccountScreen} />
-        <Route path="/logout" component={LogoutScreen} /> */}
           </Switch>
         </div>
       </Container>
@@ -76,7 +73,7 @@ function App() {
             }}
           >
             <div>
-              A React native joke by . No puppies were killed in this process.
+              A React native joke by . No puppies were harmed in this process.
             </div>
             <div>
               <img
@@ -87,6 +84,7 @@ function App() {
                 }}
               />
             </div>
+            <div>Best viewed on IE6+.</div>
           </div>
         </Container>
       </footer>

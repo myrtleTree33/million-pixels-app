@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import { Message, Button, Checkbox, Form, Input } from "semantic-ui-react";
 import { HuePicker } from "react-color";
 
+import { CardElement, injectStripe } from "react-stripe-elements";
+
 import "react-tippy/dist/tippy.css";
+import uuid from "uuid/v1";
 
 const getLoc = loc => {
   try {
@@ -58,7 +61,7 @@ class Buy extends React.Component {
     this.setState({ tosAgreed: !this.state.tosAgreed });
   };
 
-  handleSubmit = (e, propArgs) => {
+  handleSubmit = async (e, propArgs) => {
     const { onSubmit } = this.props;
     const { pos, color, hyperlink, tosAgreed, customColor } = this.state;
 
@@ -70,8 +73,9 @@ class Buy extends React.Component {
     }
 
     const [x, y] = posParsed;
+    const { token } = await this.props.stripe.createToken({ id: uuid() });
 
-    onSubmit({ ...this.state, x, y });
+    onSubmit({ ...this.state, x, y, tokenId: token.id });
   };
 
   render() {
@@ -102,7 +106,7 @@ class Buy extends React.Component {
           <Form onSubmit={this.handleSubmit}>
             <Form.Input
               placeholder="12,5"
-              label="Pixel position"
+              label="Squircle position"
               name="position"
               value={pos}
               onChange={this.handlePixelChange}
@@ -177,6 +181,8 @@ class Buy extends React.Component {
                 marginTop: "2rem"
               }}
             >
+              <CardElement />
+
               <Button type="submit">Submit</Button>
             </Form.Field>
           </Form>
@@ -186,4 +192,4 @@ class Buy extends React.Component {
   }
 }
 
-export default Buy;
+export default injectStripe(Buy);

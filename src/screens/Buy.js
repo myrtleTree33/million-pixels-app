@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+
 import queryString from "query-string";
 import ky from "ky";
+import { Elements, StripeProvider } from "react-stripe-elements";
 
 import Buy from "../components/buy/Buy";
+
+const { REACT_APP_STRIPE_PUBLIC_KEY } = process.env;
 
 class BuyScreen extends Component {
   constructor(props) {
@@ -13,7 +17,7 @@ class BuyScreen extends Component {
   handleSubmit = data => {
     (async () => {
       console.log(data);
-      const { x, y, hyperlink, color, customColor } = data;
+      const { x, y, hyperlink, color, customColor, tokenId } = data;
 
       try {
         const res = await ky
@@ -23,7 +27,8 @@ class BuyScreen extends Component {
               y,
               weblink: hyperlink,
               color,
-              customColor
+              customColor,
+              tokenId
             }
           })
           .json();
@@ -43,7 +48,14 @@ class BuyScreen extends Component {
 
   render() {
     const { loc } = queryString.parse(this.props.location.search);
-    return <Buy loc={loc} onSubmit={this.handleSubmit} />;
+
+    return (
+      <StripeProvider apiKey={REACT_APP_STRIPE_PUBLIC_KEY}>
+        <Elements>
+          <Buy loc={loc} onSubmit={this.handleSubmit} />
+        </Elements>
+      </StripeProvider>
+    );
   }
 }
 
