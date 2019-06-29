@@ -28,10 +28,6 @@ class PixelScreen extends Component {
         })
         .json();
 
-      console.log("*****");
-      console.log(pixel);
-      console.log("*****");
-
       this.setState({ pixel });
     } catch (e) {}
   }
